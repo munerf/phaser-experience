@@ -177,7 +177,7 @@ State.prototype.exportToCsv = function(filename) {
 
 State.prototype.generateCSV = function(){
 
-    var header = 'ensaio,condicao,probabilidade,participante,hora inicio;hora fim,numero de ensaios,resposta 1,resposta 2,resposta 3,resposta 4,resposta 5,resposta 6,resposta 7,resposta 8,pontuacao\n';
+    var header = 'ensaio,condicao,probabilidade,participante,hora inicio,hora fim,numero de ensaios,resposta 1,resposta 2,resposta 3,resposta 4,resposta 5,resposta 6,resposta 7,resposta 8,pontuacao\n';
 
     var ac = header; 
 
