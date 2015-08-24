@@ -24,6 +24,13 @@ function State(numberOfRehersals, condition, conditionProbability, playerName, m
     for (var i = 0; i < this.numberOfRehersals; i++) {
         this.keyPresses[i] = new Array(this.numberOfAnswers);
     }
+
+    this.scoreByRehersal = new Array(this.numberOfRehersals);
+
+    for (var i = 0; i < this.numberOfRehersals; i++) {
+        this.scoreByRehersal[i] = false;
+    }
+
 }
 
 State.prototype.getPlayerName = function () {
@@ -44,6 +51,7 @@ State.prototype.getScore = function () {
 
 State.prototype.incrementScore = function () {
     this.score++;
+    this.scoreByRehersal[this.currentRehersal-1] = true;
 };
 
 State.prototype.getCurrentRehersal = function () {
@@ -93,19 +101,43 @@ State.prototype.checkConditionWithBounds = function (min,max) {
         return false;
     }
 
-    var fstRehersalData = this.keyPresses[rehersal-2];
-    var fst = fstRehersalData.slice(min,max+1);
+    console.log("Ensaio " + rehersal);
 
-    var sndRehersalData = this.keyPresses[rehersal-3];
+    var fstRehersalData = this.keyPresses[rehersal-5];
+    var fst = fstRehersalData.slice(min,max+1);
+    
+    console.log("Ensaio a comparar " + (rehersal - 5));
+    console.log(fst);
+
+    var sndRehersalData = this.keyPresses[rehersal-4];
     var snd = sndRehersalData.slice(min,max+1);
 
-    var thrdRehersalData = this.keyPresses[rehersal-4];
+    console.log("Ensaio a comparar " + (rehersal - 4));
+    console.log(snd);
+
+    var thrdRehersalData = this.keyPresses[rehersal-3];
     var thrd = thrdRehersalData.slice(min,max+1);
 
-    var fourthRehersalData = this.keyPresses[rehersal-5];
+    console.log("Ensaio a comparar " + (rehersal - 3));
+    console.log(thrd);
+
+    var fourthRehersalData = this.keyPresses[rehersal-2];
     var fourth = fourthRehersalData.slice(min,max+1);
+
+    console.log("Ensaio a comparar " + (rehersal - 2));
+    console.log(fourth);
+
+    var fifthRehersalData = this.keyPresses[rehersal-1];
+    var fifth = fifthRehersalData.slice(min,max+1);
+
+    console.log("Ensaio a comparar " + (rehersal - 1));
+    console.log(fifth);
+
+
+    var result = checkAllDifferent([fst, snd, thrd, fourth, fifth]);
+    console.log("Resultado: "  + result);
     
-    return !(fst.equals(snd) && snd.equals(thrd) && thrd.equals(fourth));
+    return result;
 };
 
 State.prototype.checkCondition1 = function () {
@@ -176,11 +208,8 @@ State.prototype.exportToCsv = function(filename) {
 }
 
 State.prototype.generateCSV = function(){
-
-    var header = 'ensaio,condicao,probabilidade,participante,hora inicio,hora fim,numero de ensaios,resposta 1,resposta 2,resposta 3,resposta 4,resposta 5,resposta 6,resposta 7,resposta 8,pontuacao\n';
-
+    var header = 'ensaio,condicao,probabilidade,participante,hora inicio,hora fim,numero de ensaios,resposta 1,resposta 2,resposta 3,resposta 4,resposta 5,resposta 6,resposta 7,resposta 8,pontuou\n';
     var ac = header; 
-
     for(i=0; i<this.numberOfRehersals;i++){
             ac+=(i+1)
                  + ',' + this.condition
@@ -197,11 +226,23 @@ State.prototype.generateCSV = function(){
                  + ',' + this.keyPresses[i][5] 
                  + ',' + this.keyPresses[i][6] 
                  + ',' + this.keyPresses[i][7] 
-                 + ',' + this.score 
+                 + ',' + this.scoreByRehersal[i]
                  + "\n";
     }
-
     return ac;
+}
+
+function checkAllDifferent(values){
+    var ac = new Set();
+    for(i=0; i<values.length; i++){
+        var str = values[i].toString();
+        ac.add(str);
+    }
+    if(ac.size == values.length){
+        return true;
+    } else {
+        return false;
+    }
 }
 
 /**

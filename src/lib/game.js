@@ -233,7 +233,7 @@ Array.prototype.equals = function (array) {
     function showDiamond(){
         var x = player.x;
         var y = player.y;
-        var diamond = game.add.sprite(x + 48 , y, 'diamond');
+        diamond = game.add.sprite(x + 48 , y, 'diamond');
         diamond.anchor.set(-0.2);
     }
 
