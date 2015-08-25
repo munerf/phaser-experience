@@ -1,5 +1,5 @@
 // Constructor
-function State(numberOfRehersals, condition, conditionProbability, playerName, maxTime) {
+function State(numberOfRehersals, condition, conditionProbability, playerName, maxTime, lagn) {
 
     this.numberOfRehersals = numberOfRehersals;
     this.maxTime = maxTime;
@@ -8,6 +8,7 @@ function State(numberOfRehersals, condition, conditionProbability, playerName, m
     this.keyPresses = new Array(numberOfRehersals);
     this.score = 0;
     this.playerName = playerName;
+    this.lagn = lagn;
 
     this.startTime = new Date();
     this.endTime = "fim";
@@ -96,6 +97,29 @@ State.prototype.checkCondition = function () {
 };
 
 State.prototype.checkConditionWithBounds = function (min,max) {
+    rehersal = this.currentRehersal - 1;
+    if (rehersal < this.lagn) {
+        return false;
+    }
+
+    var rehersals = [];
+    for (var i = 0; i <= this.lagn; i++) {
+        var rehersalData = this.keyPresses[rehersal - i];
+        rehersalData = rehersalData.slice(min,max+1);
+        rehersals.unshift(rehersalData);
+
+        console.log("Ensaio a comparar " + (rehersal - i));
+        console.log(rehersalData);
+        console.log(rehersals);
+    };
+
+    var result = checkAllDifferent(rehersals);
+    console.log("Resultado: "  + result);
+    
+    return result;
+};
+
+State.prototype.checkConditionWithBoundsOld = function (min,max) {
     rehersal = this.currentRehersal;
     if (rehersal <= 4) {
         return false;
@@ -208,7 +232,7 @@ State.prototype.exportToCsv = function(filename) {
 }
 
 State.prototype.generateCSV = function(){
-    var header = 'ensaio,condicao,probabilidade,participante,hora inicio,hora fim,numero de ensaios,resposta 1,resposta 2,resposta 3,resposta 4,resposta 5,resposta 6,resposta 7,resposta 8,pontuou\n';
+    var header = 'ensaio,condicao,probabilidade,participante,hora inicio,hora fim,numero de ensaios,lagn,resposta 1,resposta 2,resposta 3,resposta 4,resposta 5,resposta 6,resposta 7,resposta 8,pontuou\n';
     var ac = header; 
     for(i=0; i<this.numberOfRehersals;i++){
             ac+=(i+1)
@@ -218,6 +242,7 @@ State.prototype.generateCSV = function(){
                  + ',' + this.startTime.toTimeString()  
                  + ',' + this.endTime.toTimeString() 
                  + ',' + this.numberOfRehersals 
+                 + ',' + this.lagn 
                  + ',' + this.keyPresses[i][0] 
                  + ',' + this.keyPresses[i][1] 
                  + ',' + this.keyPresses[i][2] 

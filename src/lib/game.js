@@ -66,6 +66,7 @@ Array.prototype.equals = function (array) {
         var conditionProbability = getURLParameter('conditionProbability');
         var playerName = getURLParameter('playerName');
         var maxTime = getURLParameter('maxTime'); 
+        var lagn = getURLParameter('lagn'); 
 
         /*
         console.log(numberOfRehersals);
@@ -74,7 +75,7 @@ Array.prototype.equals = function (array) {
         console.log(playerName);
         */
 
-        return new State(numberOfRehersals, condition, conditionProbability, playerName, maxTime);
+        return new State(numberOfRehersals, condition, conditionProbability, playerName, maxTime, lagn);
     }
 
     function preload() {
@@ -248,6 +249,8 @@ Array.prototype.equals = function (array) {
     function endGame(){
         state.currentRehersal=state.numberOfRehersals+10;
         state.setEndTime();
+        game.add.text(game.world.width / 2, (game.world.height / 2), "FIM", { font: '34px Arial', fill: '#fff' });
+        layer1.alpha = 0.2;
         var filename = state.playerName + '_' + state.startTime.toDateString().replace(/ /g, "_") + '.csv';
         state.exportToCsv(filename);
     }
